@@ -1,13 +1,15 @@
 import Utils from "../utils";
 import Migrate from '@radiantearth/stac-migrate';
 import { getBest } from '../locale-id';
+import URI from 'urijs';
+import { addQueryIfNotExists } from '../store/utils';
 
 let stacObjCounter = 0;
 
 // STAC Entity
 class STAC {
 
-  constructor(data, url, path, migrate = true) {
+  constructor(cx, data, url, path, migrate = true) {
     this._id = stacObjCounter++;
     this._url = url;
     this._path = path;
@@ -33,6 +35,11 @@ class STAC {
     for (let key in data) {
       if (typeof this[key] === 'undefined') {
         this[key] = data[key];
+      }
+    }
+    if (Utils.isObject(this.assets)) {
+      for (const asset of Object.values(this.assets)) {
+        asset.href = addQueryIfNotExists(URI(asset.href), cx.state.globalRequestQueryParameters).toString();
       }
     }
   }
