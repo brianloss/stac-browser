@@ -713,7 +713,7 @@ function getStore(config, router) {
             if (!Utils.isObject(response.data)) {
               throw new BrowserError(i18n.t('errors.invalidJsonObject'));
             }
-            data = new STAC(response.data, url, path);
+            data = new STAC(cx, response.data, url, path);
             if (show) {
               // If we prefer another language abort redirect to the new language
               let localeLink = data.getLocaleLink(cx.state.dataLanguage);
@@ -849,7 +849,7 @@ function getStore(config, router) {
                   return data;
                 }
                 else {
-                  data = new STAC(item, url, cx.getters.toBrowserPath(url));
+                  data = new STAC(cx, item, url, cx.getters.toBrowserPath(url));
                   data.markPotentiallyIncomplete();
                   cx.commit('loaded', { data, url });
                   return data;
@@ -908,7 +908,7 @@ function getStore(config, router) {
               return data;
             }
             else {
-              data = new STAC(collection, url, cx.getters.toBrowserPath(url));
+              data = new STAC(cx, collection, url, cx.getters.toBrowserPath(url));
               data.markPotentiallyIncomplete();
               cx.commit('loaded', { data, url });
               return data;
